@@ -12,23 +12,23 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateProductDto {
-    @NotBlank(message = "Title is required")
-    @Size(max = 50, message = "Title exceed 50 characters")
+    @NotBlank()
+    @Size(max = 50)
     private String title;
 
-    @NotBlank(message = "Description is required")
-    @Size(max = 255, message = "Description exceed 255 characters")
+    @NotBlank()
+    @Size(max = 255)
     private String description;
 
-    @NotBlank(message = "ImageUrl is required")
-    @Size(max = 255, message = "ImageUrl exceed 255 characters")
+    @NotBlank()
+    @Size(max = 255)
     private String imageUrl;
 
-    @NotBlank(message = "UniqueIdentifierNan is required")
-    @Size(max = 12, message = "UniqueIdentifierNan exceed 12 characters")
+    @NotBlank()
+    @Size(max = 12)
     private String uniqueIdentifierNan;
 
-    @NotBlank(message = "UniqueIdentifierGtin is required")
-    @Size(max = 12, message = "UniqueIdentifierNGtin exceed 12 characters")
+    @NotBlank()
+    @Size(max = 12)
     private String uniqueIdentifierGtin;
 }
