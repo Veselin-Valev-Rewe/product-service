@@ -1,10 +1,11 @@
 package com.example.product_service.controller;
 
 import com.example.product_service.dto.CreateProductDto;
-import com.example.product_service.dto.UpdateProductDto;
 import com.example.product_service.dto.ProductDto;
+import com.example.product_service.dto.UpdateProductDto;
 import com.example.product_service.service.ProductService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> getProductById(@PathVariable int id) {
+    public ResponseEntity<ProductDto> getProductById(@PathVariable @Positive int id) {
         var product = productService.getProductById(id);
         return ResponseEntity.ok(product);
     }
@@ -37,14 +38,14 @@ public class ProductController {
         return ResponseEntity.created(location).body(product);
     }
 
-    @PutMapping
-    public ResponseEntity<ProductDto> updateProduct(@RequestBody @Valid UpdateProductDto ProductDto) {
-        var product = productService.updateProduct(ProductDto);
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductDto> updateProduct(@PathVariable @Positive int id, @RequestBody @Valid UpdateProductDto ProductDto) {
+        var product = productService.updateProduct(id, ProductDto);
         return ResponseEntity.ok(product);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable int id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable @Positive int id) {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }

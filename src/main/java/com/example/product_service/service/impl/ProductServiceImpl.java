@@ -1,11 +1,13 @@
 package com.example.product_service.service.impl;
 
+import com.example.product_service.data.entity.Product;
 import com.example.product_service.data.repository.ProductRepository;
 import com.example.product_service.dto.CreateProductDto;
-import com.example.product_service.dto.UpdateProductDto;
 import com.example.product_service.dto.ProductDto;
+import com.example.product_service.dto.UpdateProductDto;
 import com.example.product_service.mapper.ProductMapper;
 import com.example.product_service.service.ProductService;
+import com.example.product_service.util.errormessage.ErrorMessages;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -30,13 +32,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto getProductById(int id) {
-        var product = productRepository.findById(id);
-
-        if (product.isEmpty()) {
-            throw new EntityNotFoundException(String.format("Product with id %d not found", id));
-        }
-
-        return mapper.toProductDto(product.get());
+        return mapper.toProductDto(getProduct(id));
     }
 
     @Override
@@ -46,30 +42,28 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto updateProduct(UpdateProductDto productDto) {
-        var product = productRepository.findById(productDto.getId());
+    public ProductDto updateProduct(int id, UpdateProductDto productDto) {
+        var product = getProduct(id);
+        product.setDescription(productDto.getDescription());
+        product.setTitle(productDto.getTitle());
+        product.setImageUrl(productDto.getImageUrl());
+        product.setUniqueIdentifierGtin(productDto.getUniqueIdentifierGtin());
+        product.setUniqueIdentifierNan(productDto.getUniqueIdentifierNan());
 
-        if (product.isEmpty()) {
-            throw new EntityNotFoundException(String.format("Product with id %d not found", productDto.getId()));
-        }
-
-        var existingProduct = product.get();
-        existingProduct.setDescription(productDto.getDescription());
-        existingProduct.setTitle(productDto.getTitle());
-        existingProduct.setImageUrl(productDto.getImageUrl());
-        existingProduct.setUniqueIdentifierGtin(productDto.getUniqueIdentifierGtin());
-        existingProduct.setUniqueIdentifierNan(productDto.getUniqueIdentifierNan());
-
-        var savedCustomer = productRepository.save(existingProduct);
-        return mapper.toProductDto(savedCustomer);
+        return mapper.toProductDto(productRepository.save(product));
     }
 
     @Override
     public void deleteProduct(int id) {
         if (!productRepository.existsById(id)) {
-            throw new EntityNotFoundException("Product not found");
+            throw new EntityNotFoundException(String.format(ErrorMessages.PRODUCT_NOT_FOUND, id));
         }
 
         productRepository.deleteById(id);
+    }
+
+    private Product getProduct(int id) {
+        return productRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(String.format(ErrorMessages.PRODUCT_NOT_FOUND, id)));
     }
 }

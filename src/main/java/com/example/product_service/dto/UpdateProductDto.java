@@ -12,8 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateProductDto {
-    private int id;
-
     @NotBlank(message = "Title is required")
     @Size(max = 50, message = "Title exceed 50 characters")
     private String title;

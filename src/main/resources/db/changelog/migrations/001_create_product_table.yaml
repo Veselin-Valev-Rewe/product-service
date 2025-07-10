@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 1-create-product-table
+      id: 001-create-product-table
       author: Veselin Valev
       changes:
         - createTable:
