@@ -1,23 +1,20 @@
 version: '3.8'
 
 services:
-  app:
+  product-service:
     build: .
     ports:
       - "8082:8082"
-    depends_on:
-      - db
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/product-service
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: root
       SPRING_APPLICATION_NAME: product-service
       SERVER_PORT: 8082
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     networks:
       - backend
 
-volumes:
-  pgdata:
-
 networks:
   backend:
+    external: true
